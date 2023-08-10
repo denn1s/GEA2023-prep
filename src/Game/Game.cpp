@@ -18,6 +18,8 @@ Game::Game(const char* name, int width, int height)
   int maxFPS = 60;
   frameDuration = (1.0f/maxFPS) * 1000.0f;
   frameCount = 0;
+
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 Game::~Game() {

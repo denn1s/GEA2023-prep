@@ -11,6 +11,8 @@
 Scene::Scene(const std::string& name)
   : name(name) {
     print("Scene Created: ", name);
+
+    world = new Entity(r.create(), this);
 }
 
 Scene::~Scene() {
@@ -19,6 +21,8 @@ Scene::~Scene() {
     for (auto s : setupSystems) {
       delete s;  // call each system destructor
     }
+
+    delete world;
 }
 
 Entity Scene::createEntity(const std::string& name, int x, int y) {

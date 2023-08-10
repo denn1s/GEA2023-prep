@@ -33,6 +33,9 @@ class Scene {
 
     entt::registry r;
 
+    // global entities
+    Entity* world;
+    
   private:
     std::string name;
   
@@ -40,5 +43,4 @@ class Scene {
     std::vector<EventSystem*> eventSystems;
     std::vector<UpdateSystem*> updateSystems;
     std::vector<RenderSystem*> renderSystems;
-
 };

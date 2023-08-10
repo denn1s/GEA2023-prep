@@ -5,6 +5,9 @@
 
 #include "ECS/Entity.h"
 
+#include "Game/Graphics/PixelShader.h"
+
+
 Pong::Pong(const char* name, int width, int height)
   : Game(name, width, height)
 {
@@ -16,27 +19,54 @@ Pong::~Pong() {
   
 }
 
+Uint32 fragment(Uint32 currentColor)
+{
+  if (currentColor == 0) {
+    return currentColor;
+  }
+
+  Uint8 red = (currentColor >> 16) & 0xff;
+  Uint8 green = (currentColor >> 8) & 0xff;
+  Uint8 blue = currentColor  & 0xff;
+  
+  std::cout << "r: " <<  (int)red << " g: " <<  (int)green << " b: " <<  (int)blue << std::endl;
+
+  return currentColor;
+}
+
 Scene* Pong::createGameplayScene() {
   Scene* scene = new Scene("GAMEPLAY SCENE");
 
-  Entity ball = scene->createEntity("BALL", 10, 10);
-  ball.addComponent<SizeComponent>(20, 20);
-  ball.addComponent<SpeedComponent>(200, 200);
-  ball.addComponent<ColliderComponent>(false, 0);
+  Entity white = scene->createEntity("cat1", 100, 100);
+  white.addComponent<SimpleSpriteComponent>("Sprites/Cat/1.png");
 
-  Entity paddle = scene->createEntity("PLAYER 1", (screen_width/2) - 50, screen_height - 20);
-  paddle.addComponent<SizeComponent>(100, 20);
-  paddle.addComponent<SpeedComponent>(0, 0);
-  paddle.addComponent<PlayerComponent>(200);
+  Entity black = scene->createEntity("cat2", 300, 100);
+  black.addComponent<SimpleSpriteComponent>(
+    "Sprites/Cat/1.png", 
+    PixelShader{ [](Uint32 pixel) -> Uint32 { return (pixel == 0xF3F2C0) ? 0xD2B48C : pixel; }, "sampleShader" }
+    // PixelShader{ fragment, "sampleShader" }
+  );
 
-  
-  scene->addSetupSystem(new HelloWorldSystem());
-  scene->addRenderSystem(new RectRenderSystem());
-  scene->addUpdateSystem(new BounceUpdateSystem());
-  scene->addUpdateSystem(new MovementUpdateSystem(screen_width, screen_height));
-  scene->addEventSystem(new PlayerInputSystem());
+  Entity anim = scene->createEntity("cat3", 500, 100);
+  anim.addComponent<SpriteComponent>(
+    "Sprites/Cat/SpriteSheet.png",
+    8, // total animationFrames
+    5000, // animation duration millis
+    0, // x index for this sprite
+    0 // y index for this sprite
+  );
 
-  scene->addUpdateSystem(new CollisionDetectionUpdateSystem());
+
+  // scene->addSetupSystem(new TilemapSetupSystem(renderer, window));
+  scene->addSetupSystem(new PerlinTilemapSetupSystem(renderer, window));
+  scene->addRenderSystem(new TilemapRenderSystem());
+
+
+  scene->addSetupSystem(new SimpleSpriteSetupSystem(renderer, window));
+  scene->addRenderSystem(new SimpleSpriteRenderSystem());
+  scene->addSetupSystem(new SpriteSetupSystem(renderer, window));
+  scene->addRenderSystem(new SpriteRenderSystem());
+  scene->addUpdateSystem(new SpriteUpdateSystem());
 
   return scene;
 }
