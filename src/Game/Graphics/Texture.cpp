@@ -1,20 +1,6 @@
 #include "Texture.h"
 #include <print.h>
 
-Texture::Texture(SDL_Renderer* renderer, SDL_Window* window) 
-  : renderer(renderer) {
-	texture = NULL;
-	width = 0;
-	height = 0;
-	pixels = NULL;
-	pitch = 0;
-
-  // format = SDL_GetWindowPixelFormat(window);
-  format = SDL_PIXELFORMAT_RGBA8888;
-
-  mappingFormat = SDL_AllocFormat(format);
-}
-
 Texture::Texture(SDL_Renderer* renderer) 
   : renderer(renderer) {
 	texture = nullptr;
@@ -48,7 +34,7 @@ void Texture::load(std::string path, PixelShader shader) {
 
 	SDL_Texture* newTexture = nullptr;
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-  SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, format, 0);
+  SDL_Surface* formattedSurface = SDL_ConvertSurfaceFormat(loadedSurface, mappingFormat->format, 0);
   newTexture = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_STREAMING, loadedSurface->w, loadedSurface->h);
   SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
 

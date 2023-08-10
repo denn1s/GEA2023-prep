@@ -43,7 +43,7 @@ Scene* Pong::createGameplayScene() {
   Entity black = scene->createEntity("cat2", 300, 100);
   black.addComponent<SimpleSpriteComponent>(
     "Sprites/Cat/1.png", 
-    PixelShader{ [](Uint32 pixel) -> Uint32 { return (pixel == 0xF3F2C0) ? 0xD2B48C : pixel; }, "sampleShader" }
+    PixelShader{ [](Uint32 pixel) -> Uint32 { return (pixel == 0xF3F2C0FF) ? 0xD2B48CFF : pixel; }, "sampleShader" }
     // PixelShader{ fragment, "sampleShader" }
   );
 
@@ -57,14 +57,14 @@ Scene* Pong::createGameplayScene() {
   );
 
 
-  // scene->addSetupSystem(new TilemapSetupSystem(renderer, window));
-  scene->addSetupSystem(new PerlinTilemapSetupSystem(renderer, window));
+  // scene->addSetupSystem(new TilemapSetupSystem(renderer));
+  scene->addSetupSystem(new PerlinTilemapSetupSystem(renderer));
   scene->addRenderSystem(new TilemapRenderSystem());
 
 
-  scene->addSetupSystem(new SimpleSpriteSetupSystem(renderer, window));
+  scene->addSetupSystem(new SimpleSpriteSetupSystem(renderer));
   scene->addRenderSystem(new SimpleSpriteRenderSystem());
-  scene->addSetupSystem(new SpriteSetupSystem(renderer, window));
+  scene->addSetupSystem(new SpriteSetupSystem(renderer));
   scene->addRenderSystem(new SpriteRenderSystem());
   scene->addUpdateSystem(new SpriteUpdateSystem());
 

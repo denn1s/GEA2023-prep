@@ -185,8 +185,8 @@ class BounceUpdateSystem : public UpdateSystem {
 
 class SimpleSpriteSetupSystem : public SetupSystem {
   public:
-    SimpleSpriteSetupSystem(SDL_Renderer* renderer, SDL_Window* window)
-      : renderer(renderer), window(window) { }
+    SimpleSpriteSetupSystem(SDL_Renderer* renderer)
+      : renderer(renderer) { }
 
     ~SimpleSpriteSetupSystem() {
       auto view = scene->r.view<SimpleSpriteComponent>();
@@ -204,13 +204,12 @@ class SimpleSpriteSetupSystem : public SetupSystem {
       for(auto entity : view) {
         const auto spriteComponent = view.get<SimpleSpriteComponent>(entity);
   
-        TextureManager::LoadTexture(spriteComponent.name, renderer, window, spriteComponent.shader);
+        TextureManager::LoadTexture(spriteComponent.name, renderer, spriteComponent.shader);
       }
     }
 
   private:
     SDL_Renderer* renderer;
-    SDL_Window* window;
 };
 
 
@@ -253,8 +252,8 @@ struct SpriteComponent {
 
 class SpriteSetupSystem : public SetupSystem {
   public:
-    SpriteSetupSystem(SDL_Renderer* renderer, SDL_Window* window)
-      : renderer(renderer), window(window) { }
+    SpriteSetupSystem(SDL_Renderer* renderer)
+      : renderer(renderer) { }
 
     ~SpriteSetupSystem() {
       auto view = scene->r.view<SpriteComponent>();
@@ -272,13 +271,12 @@ class SpriteSetupSystem : public SetupSystem {
       for(auto entity : view) {
         const auto spriteComponent = view.get<SpriteComponent>(entity);
   
-        TextureManager::LoadTexture(spriteComponent.name, renderer, window, spriteComponent.shader);
+        TextureManager::LoadTexture(spriteComponent.name, renderer, spriteComponent.shader);
       }
     }
 
   private:
     SDL_Renderer* renderer;
-    SDL_Window* window;
 };
 
 
@@ -338,8 +336,8 @@ class SpriteUpdateSystem : public UpdateSystem {
 
 class TilemapSetupSystem : public SetupSystem {
   public:
-    TilemapSetupSystem(SDL_Renderer* renderer, SDL_Window* window)
-      : renderer(renderer), window(window) { }
+    TilemapSetupSystem(SDL_Renderer* renderer)
+      : renderer(renderer) { }
 
     ~TilemapSetupSystem() {
       TextureManager::UnloadTexture("Tiles/Grass.png");
@@ -347,8 +345,8 @@ class TilemapSetupSystem : public SetupSystem {
     }
 
   void run() {
-      Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer, window);
-      Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer, window);
+      Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
+      Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
 
       // A simple 2x2 map
       int map[] = {
@@ -373,7 +371,6 @@ class TilemapSetupSystem : public SetupSystem {
 
   private:
     SDL_Renderer* renderer;
-    SDL_Window* window;
 };
 
 class TilemapRenderSystem : public RenderSystem {
@@ -404,8 +401,8 @@ class TilemapRenderSystem : public RenderSystem {
 
 class PerlinTilemapSetupSystem : public SetupSystem {
 public:
-  PerlinTilemapSetupSystem(SDL_Renderer* renderer, SDL_Window* window)
-    : renderer(renderer), window(window) { }
+  PerlinTilemapSetupSystem(SDL_Renderer* renderer)
+    : renderer(renderer) { }
 
   ~PerlinTilemapSetupSystem() {
     TextureManager::UnloadTexture("Tiles/Grass.png");
@@ -413,8 +410,8 @@ public:
   }
 
   void run() {
-    Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer, window);
-    Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer, window);
+    Texture* grassTexture = TextureManager::LoadTexture("Tiles/Grass.png", renderer);
+    Texture* waterTexture = TextureManager::LoadTexture("Tiles/Water.png", renderer);
 
     // Add the TilemapComponent to the world entity
     auto& tilemap = scene->world->get<TilemapComponent>();
@@ -454,5 +451,4 @@ public:
 
 private:
   SDL_Renderer* renderer;
-  SDL_Window* window;
 };
